@@ -54,7 +54,16 @@ module Sprockets
         input[:metadata][:map],
         SourceMapUtils.decode_json_source_map(map)["mappings"]
       )
-      { data: js, map: map }
+      # { data: js, map: map }
+      # add link to the source map
+      links = Set.new(input[:metadata][:links])
+      map_uri = input[:environment].build_asset_uri(
+        input[:filename],
+        type: 'application/js-sourcemap+json'
+      )
+      links << map_uri
+
+      { data: js, map: map, links: links }
     end
   end
 end
